@@ -19,8 +19,8 @@ def _handle_command(chat: Chat, cmd: str):
     commands[command_name](*args)
 
 
-def repl(initial_channel: str, nickname: str):
-    chat = Chat(nickname=nickname, topic=initial_channel)
+def repl(initial_channel: str, nickname: str, address: str):
+    chat = Chat(nickname=nickname, topic=initial_channel, host=address)
     chat.activate()
 
     try:

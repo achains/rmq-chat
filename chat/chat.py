@@ -20,7 +20,7 @@ class Chat:
         topic="flood",
         exchange_name="mainfs",
     ):
-        self.connection_params = pika.ConnectionParameters(host="localhost", port=5672)
+        self.connection_params = pika.ConnectionParameters(host=host, port=5672)
         self.nickname = nickname
         self.host = host
         self.port = port

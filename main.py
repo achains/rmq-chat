@@ -23,9 +23,12 @@ def main(argv):
         help="Your name that will be shown in the chat",
         default=_get_id(),
     )
+    parser.add_argument(
+        "--address", "-a", help="IP address of chat", default="127.0.0.1"
+    )
 
     args = parser.parse_args(args=argv)
-    repl(initial_channel=args.channel, nickname=args.nick)
+    repl(initial_channel=args.channel, nickname=args.nick, address=args.address)
 
 
 if __name__ == "__main__":
