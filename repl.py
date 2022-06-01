@@ -1,39 +1,37 @@
-__all__ = ['repl']
+__all__ = ["repl"]
 
 import sys
 
-
-class Chat:
-    def __init__(self):
-        self.current_channel = ""
-
-    def change_channel(self, channel: str):
-        print(f"== Connected to {channel} ==")
-        return 0
-
-    def send_msg(self, msg: str):
-        pass
+from chat import Chat
 
 
-def _handle_command(chat: Chat, command: str):
-    COMMANDS = {
-        "switch": lambda channel: chat.change_channel(channel),
-        "exit": lambda: sys.exit(0)
+def _exit_repl(chat: Chat):
+    chat.finish()
+    sys.exit(0)
+
+
+def _handle_command(chat: Chat, cmd: str):
+    commands = {
+        "switch": lambda channel: chat.change_topic(channel),
+        "exit": lambda: _exit_repl(chat),
     }
-    cmd, *args = command.split()
-    COMMANDS[cmd](*args)
+    command_name, *args = cmd.split()
+    commands[command_name](*args)
 
 
-def repl(initial_channel: str):
-    chat = Chat()
-    chat.change_channel(initial_channel)
+def repl(initial_channel: str, nickname: str):
+    chat = Chat(nickname=nickname, topic=initial_channel)
+    chat.activate()
 
-    while True:
-        msg = input(">> ")
-        if msg.startswith('!'):
-            try:
-                _handle_command(chat, msg.strip('!'))
-            except KeyError:
-                print("Error: Invalid command")
-        else:
-            chat.send_msg(msg=msg)
+    try:
+        while True:
+            msg = input("")
+            if msg.startswith("!"):
+                try:
+                    _handle_command(chat, msg.strip("!"))
+                except KeyError:
+                    print("Error: Invalid command")
+            else:
+                chat.send_message(msg=msg)
+    except KeyboardInterrupt:
+        _exit_repl(chat)

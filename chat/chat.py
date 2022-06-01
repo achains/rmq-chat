@@ -51,31 +51,15 @@ class Chat:
         )
         self.consumer.start_consuming()
 
-    def run(self):
-        self.consumer.start_consuming()
-        try:
-            while True:
-                text = input("")
-                now = datetime.now()
-                time = now.strftime("%m/%d/%Y, %H:%M:%S")
-                if text == "!exit":
-                    break
-                if text.startswith("!switch"):
-                    new_topic = text.split()
-                    if len(new_topic) == 1:
-                        print("Unsupported topic name")
-                        continue
-                    self.change_topic(new_topic[1])
+    def send_message(self, msg: str):
+        self.publisher.publish(self.__create_message(msg), self.topic)
 
-                    continue
-                if text.startswith("!topic"):
-                    print(self.topic)
-                    continue
-                if not text:
-                    continue
-                self.publisher.publish(self.__create_message(text), self.topic)
-        except KeyboardInterrupt:
-            self.consumer.stop_consuming()
+    def activate(self):
+        self.consumer.start_consuming()
+
+    def finish(self):
+        print("== Closing connection ==")
+        self.consumer.stop_consuming()
 
     def __create_message(self, base_msg):
         time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
